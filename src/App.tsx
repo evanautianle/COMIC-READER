@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import ComicDetail from './pages/ComicDetail'
+import Favorites from './pages/Favorites'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import Reader from './pages/Reader'
@@ -143,6 +144,12 @@ function App() {
             >
               Profile
             </Link>
+            <Link
+              to="/favorites"
+              className="text-xs text-neutral-400 hover:text-neutral-200"
+            >
+              Favorites
+            </Link>
             <span className="text-xs text-neutral-400">
               {profileName || session.user.email || 'Signed in'}
             </span>
@@ -205,6 +212,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/comic/:id" element={gatedContent(<ComicDetail />)} />
+          <Route path="/favorites" element={gatedContent(<Favorites />)} />
           <Route path="/profile" element={gatedContent(<Profile />)} />
           <Route
             path="/reader/:chapterId"
