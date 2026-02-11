@@ -114,6 +114,15 @@ function App() {
     setLoading(false)
   }
 
+  const gatedContent = (content: JSX.Element) =>
+    session ? (
+      content
+    ) : (
+      <div className="mx-auto max-w-6xl px-6 py-12 text-sm text-neutral-300">
+        Sign in to access this page.
+      </div>
+    )
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
@@ -188,8 +197,11 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/comic/:id" element={<ComicDetail />} />
-          <Route path="/reader/:chapterId" element={<Reader />} />
+          <Route path="/comic/:id" element={gatedContent(<ComicDetail />)} />
+          <Route
+            path="/reader/:chapterId"
+            element={gatedContent(<Reader />)}
+          />
         </Routes>
       </main>
     </div>
