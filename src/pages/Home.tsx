@@ -9,10 +9,12 @@ type Comic = {
 }
 
 export default function Home() {
+    // 2 states for comics list and error handling
   const [comics, setComics] = useState<Comic[]>([])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Fetch comics from Supabase on component mount
     const fetchData = async () => {
       const { data, error } = await supabase
         .from('comics')

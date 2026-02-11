@@ -10,6 +10,8 @@ type Page = {
 
 export default function Reader() {
   const { chapterId } = useParams()
+
+  // 3 states for pages list, current page index, and error handling
   const [pages, setPages] = useState<Page[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -18,6 +20,7 @@ export default function Reader() {
     if (!chapterId) return
 
     const fetchPages = async () => {
+      // fetch pages
       const { data, error } = await supabase
         .from('pages')
         .select('id, page_number, image_url')

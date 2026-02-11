@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 
+// Define comic & Chapeter types
 type Comic = {
   id: string
   title: string
@@ -16,8 +17,11 @@ type Chapter = {
   number: number | null
 }
 
+// Display comic details and list of chapters
 export default function ComicDetail() {
   const { id } = useParams()
+
+  // 3 states for comic details, chapters, and error handling
   const [comic, setComic] = useState<Comic | null>(null)
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -25,6 +29,7 @@ export default function ComicDetail() {
   useEffect(() => {
     if (!id) return
 
+    // fetch comic
     const fetchData = async () => {
       const { data: comicData, error: comicError } = await supabase
         .from('comics')
@@ -37,6 +42,7 @@ export default function ComicDetail() {
         return
       }
 
+      // fetch chapters
       const { data: chapterData, error: chapterError } = await supabase
         .from('chapters')
         .select('id, title, number')
@@ -48,6 +54,7 @@ export default function ComicDetail() {
         return
       }
 
+      // save data to state
       setComic(comicData)
       setChapters(chapterData ?? [])
     }
