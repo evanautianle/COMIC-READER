@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import ComicsGrid from '../components/ComicsGrid'
 import { supabase } from '../lib/supabaseClient'
 
 type Comic = {
@@ -48,30 +48,7 @@ export default function Home() {
         <div className="mt-4 text-sm text-red-400">{error}</div>
       ) : null}
 
-      <div className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-        {comics.map((comic) => (
-          <Link
-            key={comic.id}
-            to={`/comic/${comic.id}`}
-            className="overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 transition hover:border-neutral-700"
-          >
-            {comic.cover_url ? (
-              <img
-                src={comic.cover_url}
-                alt={comic.title}
-                className="h-70 w-full object-cover"
-              />
-            ) : (
-              <div className="flex h-70 items-center justify-center bg-neutral-800 text-xs text-neutral-400">
-                No cover
-              </div>
-            )}
-            <div className="px-3 py-2">
-              <div className="text-sm font-semibold">{comic.title}</div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <ComicsGrid comics={comics} />
     </div>
   )
 }
