@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import FavoritesGrid from '../components/FavoritesGrid'
 import { supabase } from '../lib/supabaseClient'
 
 type FavoriteRow = {
@@ -54,40 +55,7 @@ export default function Favorites() {
 
       {error ? <div className="mt-4 text-sm text-red-400">{error}</div> : null}
 
-      <div className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-        {favorites.map((favorite) =>
-          favorite.comic ? (
-            <Link
-              key={favorite.id}
-              to={`/comic/${favorite.comic.id}`}
-              className="overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 transition hover:border-neutral-700"
-            >
-              {favorite.comic.cover_url ? (
-                <img
-                  src={favorite.comic.cover_url}
-                  alt={favorite.comic.title}
-                  className="h-70 w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-70 items-center justify-center bg-neutral-800 text-xs text-neutral-400">
-                  No cover
-                </div>
-              )}
-              <div className="px-3 py-2">
-                <div className="text-sm font-semibold">
-                  {favorite.comic.title}
-                </div>
-              </div>
-            </Link>
-          ) : null,
-        )}
-      </div>
-
-      {favorites.length === 0 && !error ? (
-        <div className="mt-6 text-sm text-neutral-400">
-          No favorites yet.
-        </div>
-      ) : null}
+      {error ? null : <FavoritesGrid favorites={favorites} />}
     </div>
   )
 }
