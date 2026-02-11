@@ -54,12 +54,14 @@ export default function useUserActivity(): UseUserActivityResult {
             .from('ratings')
             .select('id, rating, created_at, comic:comics(id, title, cover_url)')
             .eq('user_id', userData.user.id)
-            .order('created_at', { ascending: false }),
+            .order('created_at', { ascending: false })
+            .returns<RatingRow[]>(),
           supabase
             .from('comments')
             .select('id, content, created_at, comic:comics(id, title, cover_url)')
             .eq('user_id', userData.user.id)
-            .order('created_at', { ascending: false }),
+            .order('created_at', { ascending: false })
+            .returns<CommentRow[]>(),
         ])
 
       if (ratingsError || commentsError) {
@@ -68,8 +70,8 @@ export default function useUserActivity(): UseUserActivityResult {
         return
       }
 
-      setRatings((ratingsData as RatingRow[] | null) ?? [])
-      setComments((commentsData as CommentRow[] | null) ?? [])
+      setRatings(ratingsData ?? [])
+      setComments(commentsData ?? [])
       setLoading(false)
     }
 

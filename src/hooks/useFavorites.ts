@@ -35,6 +35,7 @@ export default function useFavorites(): UseFavoritesResult {
         .select('id, created_at, comic:comics(id, title, cover_url)')
         .eq('user_id', userData.user.id)
         .order('created_at', { ascending: false })
+        .returns<FavoriteRow[]>()
 
       if (favoritesError) {
         setError(favoritesError.message)
