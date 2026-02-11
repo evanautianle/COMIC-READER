@@ -41,6 +41,22 @@ A comic library reader for public domain Golden Age comics. The app lets people 
 - Email/password auth via Supabase.
 - Profiles are created on first sign-in and editable in the Profile page.
 
+## Architecture Diagram
+```mermaid
+flowchart LR
+	UI[React UI] --> Hooks[Data hooks]
+	Hooks --> Supabase[(Supabase)]
+	Supabase --> DB[(Postgres DB)]
+	Supabase --> Storage[(Storage)]
+	Auth[Supabase Auth] --> UI
+```
+
+## Data Flow
+1. React components render pages based on the route.
+2. Hooks fetch data from Supabase and return it to components.
+3. User actions (favorite, rate, comment) write to Supabase.
+4. UI refreshes by reloading hook data.
+
 ## Database Schema
 ![Schema Visualizer](public/schema.png)
 
