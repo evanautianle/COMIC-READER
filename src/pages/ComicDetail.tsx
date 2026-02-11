@@ -25,12 +25,24 @@ export default function ComicDetail() {
   const [comic, setComic] = useState<Comic | null>(null)
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [favoriteId, setFavoriteId] = useState<number | null>(null)
+  const [favoriteLoading, setFavoriteLoading] = useState(false)
 
   useEffect(() => {
     if (!id) return
 
-    // fetch comic
     const fetchData = async () => {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser()
+
+      if (userError) {
+        setError(userError.message)
+        return
+      }
+
+      setUserId(userData.user?.id ?? null)
+
       const { data: comicData, error: comicError } = await supabase
         .from('comics')
         .select('id, title, author, description, cover_url')
@@ -42,7 +54,6 @@ export default function ComicDetail() {
         return
       }
 
-      // fetch chapters
       const { data: chapterData, error: chapterError } = await supabase
         .from('chapters')
         .select('id, title, number')
@@ -54,13 +65,68 @@ export default function ComicDetail() {
         return
       }
 
-      // save data to state
       setComic(comicData)
       setChapters(chapterData ?? [])
     }
 
     fetchData()
   }, [id])
+
+  useEffect(() => {
+    if (!id || !userId) return
+
+    const fetchFavorite = async () => {
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('comic_id', id)
+        .eq('user_id', userId)
+        .maybeSingle<{ id: number }>()
+
+      if (error) {
+        setError(error.message)
+        return
+      }
+
+      setFavoriteId(data?.id ?? null)
+    }
+
+    fetchFavorite()
+  }, [id, userId])
+
+  const handleFavoriteToggle = async () => {
+    if (!id || !userId) return
+
+    setFavoriteLoading(true)
+    setError(null)
+
+    if (favoriteId) {
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('id', favoriteId)
+
+      if (error) {
+        setError(error.message)
+      } else {
+        setFavoriteId(null)
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('favorites')
+        .insert({ comic_id: id, user_id: userId })
+        .select('id')
+        .single<{ id: number }>()
+
+      if (error) {
+        setError(error.message)
+      } else {
+        setFavoriteId(data.id)
+      }
+    }
+
+    setFavoriteLoading(false)
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
@@ -89,9 +155,19 @@ export default function ComicDetail() {
           </div>
 
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {comic.title}
-            </h1>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {comic.title}
+              </h1>
+              <button
+                type="button"
+                onClick={handleFavoriteToggle}
+                disabled={favoriteLoading}
+                className="rounded-md border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-200 transition hover:border-neutral-700 disabled:opacity-50"
+              >
+                {favoriteId ? 'Remove favorite' : 'Add to favorites'}
+              </button>
+            </div>
             {comic.author ? (
               <p className="mt-2 text-sm text-neutral-400">
                 {comic.author}
