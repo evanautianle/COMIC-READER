@@ -14,7 +14,7 @@ A comic library reader for public domain Golden Age comics. The app lets people 
 ## Tech Stack
 - React + TypeScript + Vite
 - Tailwind CSS
-- Supabase (Database, Storage)
+- Supabase (Auth, Database, Storage)
 
 ## How It Works
 **Frontend**
@@ -34,12 +34,21 @@ A comic library reader for public domain Golden Age comics. The app lets people 
 **Backend (Supabase)**
 - `comics` table stores comic metadata and a `coming_soon` boolean flag.
 - Chapters and pages are loaded per comic in their respective tables.
-- Favorites, ratings, comments, and user activity are stored in their own tables.
+- Favorites, ratings, and comments are stored in their own tables; activity is derived from them.
 - Cover images and page assets are stored in Supabase Storage.
+- Row Level Security (RLS) protects user-owned data (favorites, ratings, comments, profiles).
 
 **Auth**
 - Email/password auth via Supabase.
 - Profiles are created on first sign-in and editable in the Profile page.
+
+## Why This Project
+- Preserve and present public domain Golden Age comics in a clean reader experience.
+- This is a passion project and a portfolio piece showcasing a full stack app with auth, data modeling, and a reader UX.
+- Practice product-level UX details like favorites, ratings, and activity tracking.
+- I have a long-standing interest in comic collecting and regularly visit local comic shops with friends.
+- Digital reading is practical, but I still value physical copies because they preserve the material history of the medium.
+- Many older issues are difficult to find in good condition, so online access is often the most realistic way to read them.
 
 ## Architecture Diagram
 ```mermaid
@@ -63,6 +72,23 @@ flowchart LR
 - `comics`, `chapters`, `pages`
 - `favorites`, `ratings`, `comments`
 - `profiles`
+
+## Screenshots
+**Mobile**
+![Mobile - Home](public/screenshots/phone-home.png)
+![Mobile - Comic Detail](public/screenshots/phone-comic-detail.png)
+![Mobile - Reader](public/screenshots/phone-reader.png)
+![Mobile - Favorites](public/screenshots/phone-favourites.png)
+![Mobile - Activity](public/screenshots/phone-activity.png)
+![Mobile - Profile](public/screenshots/phone-profile.png)
+
+**Desktop**
+![Desktop - Home](public/screenshots/desk-home.png)
+![Desktop - Comic Detail](public/screenshots/desk-comic-detail.png)
+![Desktop - Reader](public/screenshots/desk-reader.png)
+![Desktop - Favorites](public/screenshots/desk-favourites.png)
+![Desktop - Activity](public/screenshots/desk-activity.png)
+![Desktop - Profile](public/screenshots/desk-profile.png)
 
 ## Running Locally
 **Prerequisites**
@@ -102,5 +128,4 @@ npm run preview
 
 ## Notes
 - This project is focused on public domain Golden Age comics.
-- This is a passion project and a portfolio piece showcasing a full stack app with auth, data modeling, and a reader UX.
 
