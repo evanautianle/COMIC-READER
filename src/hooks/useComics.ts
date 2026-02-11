@@ -5,6 +5,7 @@ type Comic = {
   id: string
   title: string
   cover_url: string | null
+  coming_soon: boolean | null
 }
 
 type UseComicsResult = {
@@ -20,7 +21,7 @@ export default function useComics(): UseComicsResult {
     const fetchComics = async () => {
       const { data, error: comicsError } = await supabase
         .from('comics')
-        .select('id, title, cover_url')
+        .select('id, title, cover_url, coming_soon')
         .order('title')
 
       if (comicsError) {
