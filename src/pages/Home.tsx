@@ -1,36 +1,9 @@
-import { useEffect, useState } from 'react'
 import ComicsGrid from '../components/ComicsGrid'
-import { supabase } from '../lib/supabaseClient'
-
-type Comic = {
-  id: string
-  title: string
-  cover_url: string | null
-}
+import useComics from '../hooks/useComics'
 
 export default function Home() {
     // 2 states for comics list and error handling
-  const [comics, setComics] = useState<Comic[]>([])
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    // Fetch comics from Supabase on component mount
-    const fetchData = async () => {
-      const { data, error } = await supabase
-        .from('comics')
-        .select('id, title, cover_url')
-        .order('title')
-
-      if (error) {
-        setError(error.message)
-        return
-      }
-
-      setComics(data ?? [])
-    }
-
-    fetchData()
-  }, [])
+  const { comics, error } = useComics()
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
